@@ -122,6 +122,7 @@ void GcodeSuite::say_units() {
  * Return -1 if the T parameter is out of range
  */
 int8_t GcodeSuite::get_target_extruder_from_command() {
+#ifndef DISABLE_GCODE_T
   if (parser.seenval('T')) {
     const int8_t e = parser.value_byte();
     if (e < EXTRUDERS) return e;
@@ -130,6 +131,7 @@ int8_t GcodeSuite::get_target_extruder_from_command() {
     SERIAL_ECHOLNPGM(" " STR_INVALID_EXTRUDER " ", e);
     return -1;
   }
+#endif
   return active_extruder;
 }
 
@@ -667,7 +669,10 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
         case 87: M87(); break;                                    // M87: Cancel Hotend Idle Timeout
       #endif
 
-      case 92: M92(); break;                                      // M92: Set the steps-per-unit for one or more axes
+      #if DISABLED(NO_EDIT_STEPS_UNIT)
+				case 92: M92(); break;                                    // M92: Set the steps-per-unit for one or more axes
+      #endif
+
       case 114: M114(); break;                                    // M114: Report current position
       case 115: M115(); break;                                    // M115: Report capabilities
 
@@ -678,7 +683,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       case 120: M120(); break;                                    // M120: Enable endstops
       case 121: M121(); break;                                    // M121: Disable endstops
 
-      #if HAS_PREHEAT
+      #if DISABLED(NO_EDIT_PREHEAT) && HAS_PREHEAT
         case 145: M145(); break;                                  // M145: Set material heatup parameters
       #endif
 
@@ -743,7 +748,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
 
       case 220: M220(); break;                                    // M220: Set Feedrate Percentage: S<percent> ("FR" on your LCD)
 
-      #if HAS_EXTRUDERS
+      #if DISABLED(NO_SET_FLOW) && HAS_EXTRUDERS
         case 221: M221(); break;                                  // M221: Set Flow Percentage
       #endif
 
@@ -903,7 +908,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #if DISABLED(DISABLE_M503)
         case 503: M503(); break;                                  // M503: print settings currently in memory
       #endif
-      #if ENABLED(EEPROM_SETTINGS)
+      #if DISABLED(NO_VALIDATE_EEPROM) && ENABLED(EEPROM_SETTINGS)
         case 504: M504(); break;                                  // M504: Validate EEPROM contents
       #endif
 
@@ -945,7 +950,9 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
 
       #if ENABLED(ADVANCED_PAUSE_FEATURE)
         case 600: M600(); break;                                  // M600: Pause for Filament Change
-        case 603: M603(); break;                                  // M603: Configure Filament Change
+        #if DISABLED(NO_CONFIGURE_M600)
+          case 603: M603(); break;                                  // M603: Configure Filament Change
+        #endif
       #endif
 
       #if HAS_DUPLICATION_MODE
@@ -1111,7 +1118,9 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
     }
     break;
 
+    #if DISABLED(DISABLE_GCODE_T)
     case 'T': T(parser.codenum); break;                           // Tn: Tool Change
+    #endif
 
     #if ENABLED(MARLIN_DEV_MODE)
       case 'D': D(parser.codenum); break;                         // Dn: Debug codes
