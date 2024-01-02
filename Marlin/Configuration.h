@@ -1237,6 +1237,11 @@
 #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 415 }
 
 /**
+ * Disable support for M92 to save ~ bytes of flash
+ */
+//#define NO_EDIT_STEPS_PER_UNIT
+
+/**
  * Default Max Feed Rate (linear=mm/s, rotational=°/s)
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
@@ -3596,6 +3601,5 @@
 
 #define NO_SET_FLOW
 #define NO_VALIDATE_EEPROM
-#define NO_EDIT_STEPS_UNIT
 #define NO_EDIT_PREHEAT
 #define NO_ADVANCED_SETTINGS_MENU
