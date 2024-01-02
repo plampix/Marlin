@@ -122,7 +122,7 @@ void GcodeSuite::say_units() {
  * Return -1 if the T parameter is out of range
  */
 int8_t GcodeSuite::get_target_extruder_from_command() {
-#ifndef DISABLE_GCODE_T
+#ifndef NO_MULTIPLE_EXTRUDERS
   if (parser.seenval('T')) {
     const int8_t e = parser.value_byte();
     if (e < EXTRUDERS) return e;
@@ -950,7 +950,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
 
       #if ENABLED(ADVANCED_PAUSE_FEATURE)
         case 600: M600(); break;                                  // M600: Pause for Filament Change
-        #if DISABLED(NO_CONFIGURE_M600)
+        #if ENABLED(CONFIGURE_FILAMENT_CHANGE)
           case 603: M603(); break;                                  // M603: Configure Filament Change
         #endif
       #endif
@@ -1118,7 +1118,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
     }
     break;
 
-    #if DISABLED(DISABLE_GCODE_T)
+    #if DISABLED(NO_MULTIPLE_EXTRUDERS)
     case 'T': T(parser.codenum); break;                           // Tn: Tool Change
     #endif
 
