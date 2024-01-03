@@ -674,7 +674,10 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #endif
 
       case 114: M114(); break;                                    // M114: Report current position
-      case 115: M115(); break;                                    // M115: Report capabilities
+
+      #if ENABLED(REPORT_CAPABILITIES_GCODE)
+        case 115: M115(); break;                                  // M115: Report capabilities
+      #endif
 
       case 117: TERN_(HAS_STATUS_MESSAGE, M117()); break;         // M117: Set LCD message text, if possible
 
