@@ -779,7 +779,7 @@
   //#define MIN_BED_POWER 0
   //#define PID_BED_DEBUG // Print Bed PID debug data to the serial port.
 
-  // Magnetic PEI sheet @75
+  // PEI
 	// M303 E-1 C8 S75 U1
   #define DEFAULT_bedKp 90.49
   #define DEFAULT_bedKi 17.53
@@ -1602,7 +1602,7 @@
 #define Z_PROBE_FEEDRATE_FAST (8*60)
 
 // Feedrate (mm/min) for the "accurate" probe of each point
-#define Z_PROBE_FEEDRATE_SLOW (Z_PROBE_FEEDRATE_FAST / 2)
+#define Z_PROBE_FEEDRATE_SLOW (Z_PROBE_FEEDRATE_FAST / 4)
 
 /**
  * Probe Activation Switch
