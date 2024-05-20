@@ -3616,3 +3616,8 @@
 
 // Disable servo with M282 to reduce power consumption, noise, and heat when not in use
 //#define SERVO_DETACH_GCODE
+
+#define NO_SET_FLOW
+#define NO_VALIDATE_EEPROM
+#define NO_EDIT_PREHEAT
+#define NO_ADVANCED_SETTINGS_MENU

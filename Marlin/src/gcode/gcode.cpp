@@ -686,7 +686,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       case 120: M120(); break;                                    // M120: Enable endstops
       case 121: M121(); break;                                    // M121: Disable endstops
 
-      #if HAS_PREHEAT
+      #if DISABLED(NO_EDIT_PREHEAT) && HAS_PREHEAT
         case 145: M145(); break;                                  // M145: Set material heatup parameters
       #endif
 
@@ -751,7 +751,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
 
       case 220: M220(); break;                                    // M220: Set Feedrate Percentage: S<percent> ("FR" on your LCD)
 
-      #if HAS_EXTRUDERS
+      #if DISABLED(NO_SET_FLOW) && HAS_EXTRUDERS
         case 221: M221(); break;                                  // M221: Set Flow Percentage
       #endif
 
@@ -911,7 +911,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
       #if DISABLED(DISABLE_M503)
         case 503: M503(); break;                                  // M503: print settings currently in memory
       #endif
-      #if ENABLED(EEPROM_SETTINGS)
+      #if DISABLED(NO_VALIDATE_EEPROM) && ENABLED(EEPROM_SETTINGS)
         case 504: M504(); break;                                  // M504: Validate EEPROM contents
       #endif
 
