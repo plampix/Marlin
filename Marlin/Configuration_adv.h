@@ -1214,7 +1214,7 @@
   #endif
   //#define SHAPING_MIN_FREQ  20.0      // (Hz) By default the minimum of the shaping frequencies. Override to affect SRAM usage.
   //#define SHAPING_MAX_STEPRATE 10000  // By default the maximum total step rate of the shaped axes. Override to affect SRAM usage.
-  //#define SHAPING_MENU                // Add a menu to the LCD to set shaping parameters.
+  #define SHAPING_MENU                // Add a menu to the LCD to set shaping parameters.
 #endif
 
 // @section motion
@@ -1901,6 +1901,7 @@
    * See docs/ConfigEmbedding.md for details on how to use 'mc-apply.py'.
    */
   #define CONFIGURATION_EMBEDDING
+  #define NO_CONFIGURATION_EMBEDDING_WARNING
 
   // Add an optimized binary file transfer mode, initiated with 'M28 B1'
   #define BINARY_FILE_TRANSFER
