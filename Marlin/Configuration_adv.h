@@ -2010,7 +2010,7 @@
 
   // Only one STATUS_HEAT_* option can be enabled
   //#define STATUS_HEAT_PERCENT       // Show heating in a progress bar
-  //#define STATUS_HEAT_POWER         // Show heater output power as a vertical bar
+  #define STATUS_HEAT_POWER         // Show heater output power as a vertical bar
 
   // Frivolous Game Options
   //#define MARLIN_BRICKOUT
