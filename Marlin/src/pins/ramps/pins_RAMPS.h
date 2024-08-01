@@ -645,9 +645,7 @@
 
     #elif ENABLED(ZONESTAR_LCD)
 
-      #ifndef NO_CONTROLLER_CUSTOM_WIRING_WARNING
-        #error "CAUTION! ZONESTAR_LCD on RAMPS requires wiring modifications. It plugs into AUX2 but GND and 5V need to be swapped. See 'pins_RAMPS.h' for details. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
-      #endif
+      CONTROLLER_WARNING("RAMPS", "ZONESTAR_LCD", " Plugs into AUX2 but GND and 5V must be swapped.")
 
       #define LCD_PINS_RS                AUX2_05
       #define LCD_PINS_EN                AUX2_07
@@ -744,6 +742,7 @@
       #define BTN_ENC                    AUX4_03
       #define LCD_SDSS                      SDSS
       #define KILL_PIN               EXP2_08_PIN
+      #undef LCD_PINS_EN                          // not used, causes false pin conflict report
 
     #elif ENABLED(LCD_I2C_VIKI)
 
@@ -936,9 +935,7 @@
 
 #if ALL(TOUCH_UI_FTDI_EVE, LCD_FYSETC_TFT81050)
 
-  #ifndef NO_CONTROLLER_CUSTOM_WIRING_WARNING
-    #error "CAUTION! LCD_FYSETC_TFT81050 requires wiring modifications. See 'pins_RAMPS.h' for details. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
-  #endif
+  CONTROLLER_WARNING("RAMPS", "LCD_FYSETC_TFT81050")
 
   /**
    * FYSETC TFT-81050 display pinout
