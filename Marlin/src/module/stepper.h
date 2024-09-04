@@ -59,7 +59,7 @@
   #define E_STATES EXTRUDERS  // All steppers are set together for each mixer. (Currently limited to 1.)
 #elif HAS_SWITCHING_EXTRUDER
   #define E_STATES E_STEPPERS // One stepper for every two EXTRUDERS. The last extruder can be non-switching.
-#elif HAS_PRUSA_MMU2
+#elif HAS_PRUSA_MMU2 || HAS_PRUSA_MMU3
   #define E_STATES E_STEPPERS // One E stepper shared with all EXTRUDERS, so setting any only sets one.
 #else
   #define E_STATES E_STEPPERS // One stepper for each extruder, so each can be disabled individually.
@@ -539,6 +539,11 @@ class Stepper {
     // Set the current position in steps
     static void set_position(const xyze_long_t &spos);
     static void set_axis_position(const AxisEnum a, const int32_t &v);
+
+    #if HAS_EXTRUDERS
+      // Save a little when E is the only one used
+      static void set_e_position(const int32_t &v);
+    #endif
 
     // Report the positions of the steppers, in steps
     static void report_a_position(const xyz_long_t &pos);
