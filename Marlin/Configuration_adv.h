@@ -2056,11 +2056,11 @@
    * Use 'M503 C' to write the settings out to the SD Card as 'mc.zip'.
    * See docs/ConfigEmbedding.md for details on how to use 'mc-apply.py'.
    */
-  #define CONFIGURATION_EMBEDDING
+  //#define CONFIGURATION_EMBEDDING
   #define NO_CONFIGURATION_EMBEDDING_WARNING
 
   // Add an optimized binary file transfer mode, initiated with 'M28 B1'
-  #define BINARY_FILE_TRANSFER
+  //#define BINARY_FILE_TRANSFER
 
   #if ENABLED(BINARY_FILE_TRANSFER)
     // Include extra facilities (e.g., 'M20 F') supporting firmware upload via BINARY_FILE_TRANSFER
