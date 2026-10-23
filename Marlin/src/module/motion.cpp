@@ -218,7 +218,7 @@ int16_t Motion::feedrate_percentage = 100;
   feedRate_t Motion::xy_probe_feedrate_mm_s = MMM_TO_MMS(XY_PROBE_FEEDRATE);
 #endif
 
-#if ENABLED(PROUI_ITEM_ZFR)
+#if ALL(DWIN_LCD_PROUI, HAS_BED_PROBE)
   uint16_t Motion::z_probe_slow_mm_s = MMM_TO_MMS(Z_PROBE_FEEDRATE_SLOW);
 #elif Z_PROBE_FEEDRATE_SLOW
   constexpr feedRate_t Motion::z_probe_slow_mm_s;
@@ -1409,8 +1409,12 @@ void Motion::restore_feedrate_and_scaling() {
   /**
    * Constrain the given coordinates to the software endstops.
    *
-   * For DELTA/SCARA the XY constraint is based on the smallest
+   * For DELTA the XY constraint is based on the smallest
    * radius within the set software endstops.
+   *
+   * SCARA uses the XY software endstops (bed bounds) like Cartesian,
+   * since the bed origin is not at the center of the arm's reach.
+   * TPARA only constrains Z.
    */
   void Motion::apply_limits(xyz_pos_t &target) {
     //SERIAL_ECHOLNPGM("Motion limits in: ", target.x, ", ", target.y, ", ", target.z);
@@ -1418,7 +1422,7 @@ void Motion::restore_feedrate_and_scaling() {
 
     if (!soft_endstop.enabled()) return;
 
-    #if IS_KINEMATIC
+    #if IS_KINEMATIC && !IS_SCARA
 
       if (TERN0(DELTA, !all_axes_homed())) return;
 
@@ -1430,7 +1434,6 @@ void Motion::restore_feedrate_and_scaling() {
       #elif ENABLED(POLAR)
         // For now, we don't limit POLAR
       #else
-        // SCARA needs to consider the angle of the arm through the entire move, so for now use no tool offset.
         constexpr xy_pos_t offs{0};
       #endif
 
@@ -1440,12 +1443,14 @@ void Motion::restore_feedrate_and_scaling() {
       #elif ENABLED(POLAR)
         // Motion limits are as same as cartesian limits.
       #else
-        if (TERN1(IS_SCARA, axis_was_homed(X_AXIS) && axis_was_homed(Y_AXIS))) {
-          const float dist_2 = HYPOT2(target.x - offs.x, target.y - offs.y);
-          //SERIAL_ECHOLNPGM("Motion limits data: dist_2:", dist_2, " delta_max_radius_2: ", delta_max_radius_2);
-          //SERIAL_EOL();
-          if (dist_2 > delta_max_radius_2)
-            target *= float(delta_max_radius / SQRT(dist_2)); // 200 / 300 = 0.66
+        const float dist_2 = HYPOT2(target.x - offs.x, target.y - offs.y);
+        //SERIAL_ECHOLNPGM("Motion limits data: dist_2:", dist_2, " delta_max_radius_2: ", delta_max_radius_2);
+        //SERIAL_EOL();
+        if (dist_2 > delta_max_radius_2) {
+          // Bring the effector center back to the printable radius. Z is limited below.
+          const float ratio = delta_max_radius / SQRT(dist_2); // 200 / 300 = 0.66
+          target.x = offs.x + (target.x - offs.x) * ratio;
+          target.y = offs.y + (target.y - offs.y) * ratio;
         }
       #endif
 
